@@ -417,7 +417,11 @@ def run_softmax(in_features: Float[Tensor, " ..."], dim: int) -> Float[Tensor, "
         Float[Tensor, "..."]: 与 `in_features` 形状相同的张量，
         表示在指定 `dim` 上归一化后的 softmax 输出。
     """
-    raise NotImplementedError
+    max_value = in_features.max(dim=dim, keepdim=True).values
+    stable = in_features - max_value
+    exp_vals = torch.exp(stable)
+    denom = exp_vals.sum(dim=dim, keepdim=True)
+    return exp_vals / denom
 
 
 def run_cross_entropy(
