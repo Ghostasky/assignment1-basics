@@ -380,6 +380,7 @@ def run_silu(in_features: Float[Tensor, " ..."]) -> Float[Tensor, " ..."]:
         Float[Tensor,"..."]: 与 `in_features` 形状相同的张量，
         表示逐元素应用 SiLU 后的输出。
     """
+    return in_features * torch.sigmoid(in_features)
     raise NotImplementedError
 
 
