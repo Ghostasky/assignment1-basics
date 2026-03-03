@@ -455,7 +455,28 @@ def run_gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm:
 
     参数梯度（parameter.grad）应被原地修改。
     """
-    raise NotImplementedError
+    grads: list[Tensor] = []
+    for p in parameters:
+        grad = p.grad
+        if grad is not None:
+            grads.append(grad)
+
+    if not grads:
+        return
+
+    # 计算所有梯度拼接后的全局 L2 范数。
+    total_norm_sq = torch.zeros((), device=grads[0].device)
+    for grad in grads:
+        total_norm_sq = total_norm_sq + grad.pow(2).sum()
+    total_norm = torch.sqrt(total_norm_sq)
+
+    if total_norm <= max_l2_norm:
+        return
+
+    # 与 torch.nn.utils.clip_grad_norm_ 保持一致，分母加 1e-6 防止除零。
+    scale = max_l2_norm / (total_norm + 1e-6)
+    for grad in grads:
+        grad.mul_(scale)
 
 
 def get_adamw_cls() -> Any:

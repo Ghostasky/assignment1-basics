@@ -71,8 +71,8 @@ uv run pytest -q
 
 - [x] `silu`
 - [x] `softmax`
-- [ ] `cross_entropy`
-- [ ] `gradient_clipping`
+- [x] `cross_entropy`
+- [x] `gradient_clipping`
 - 完成定义：`uv run pytest tests/test_nn_utils.py -q`
 
 ### 2) 数据组件
