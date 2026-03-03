@@ -83,7 +83,7 @@ uv run pytest -q
 ### 3) 模型底层组件
 
 - [x] `linear`
-- [ ] `embedding`
+- [x] `embedding`
 - [ ] `rmsnorm`
 - [ ] `scaled_dot_product_attention`
 - [ ] `rope`

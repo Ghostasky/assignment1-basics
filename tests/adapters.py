@@ -54,7 +54,8 @@ def run_embedding(
     Returns:
         Float[Tensor, "... d_model"]: 由你的 Embedding 层返回的一批嵌入向量。
     """
-
+    out = weights[token_ids]
+    return out
     raise NotImplementedError
 
 
