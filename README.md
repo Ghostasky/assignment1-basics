@@ -77,7 +77,7 @@ uv run pytest -q
 
 ### 2) 数据组件
 
-- [ ] `get_batch`
+- [x] `get_batch`
 - 完成定义：`uv run pytest tests/test_data.py -q`
 
 ### 3) 模型底层组件

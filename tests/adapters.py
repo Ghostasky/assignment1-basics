@@ -402,7 +402,17 @@ def run_get_batch(
         由两个形状为 (batch_size, context_length) 的 torch.LongTensor 组成的元组。
         第一个是采样得到的输入序列，第二个是对应的语言模型标签。
     """
-    raise NotImplementedError
+    num_starting_indices = len(dataset) - context_length
+    assert num_starting_indices > 0, "dataset length must be greater than context_length"
+
+    data = torch.as_tensor(dataset, dtype=torch.long, device=device)
+    # 均匀采样每个样本的起点（有放回采样）。
+    starts = torch.randint(low=0, high=num_starting_indices, size=(batch_size,), device=device)
+    offsets = torch.arange(context_length, device=device)
+
+    x = data[starts.unsqueeze(1) + offsets.unsqueeze(0)]
+    y = data[starts.unsqueeze(1) + offsets.unsqueeze(0) + 1]
+    return x, y
 
 
 def run_softmax(in_features: Float[Tensor, " ..."], dim: int) -> Float[Tensor, " ..."]:
