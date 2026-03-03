@@ -28,6 +28,10 @@ def run_linear(
     Returns:
         Float[Tensor, "... d_out"]: 你的线性模块变换后的输出。
     """
+    out = in_features @ weights.T
+    
+    # 或者：out = torch.matmul(in_features, weights.transpose(-1, -2))
+    return out
 
     raise NotImplementedError
 
