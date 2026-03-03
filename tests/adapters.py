@@ -438,7 +438,12 @@ def run_cross_entropy(
     Returns:
         Float[Tensor, ""]: 所有样本上的平均交叉熵损失。
     """
-    raise NotImplementedError
+    # 先在类别维做稳定 log-softmax，得到每个类别的对数概率。
+    log_probs = torch.log_softmax(inputs, dim=1)
+    # 从每个样本中取出真实类别对应的 log-prob，形状 [B]。
+    gold_log_probs = log_probs.gather(dim=1, index=targets.unsqueeze(1)).squeeze(1)
+    # 负对数似然并在 batch 维求平均，返回标量 loss。
+    return (-gold_log_probs).mean()
 
 
 def run_gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm: float) -> None:
