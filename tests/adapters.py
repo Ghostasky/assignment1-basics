@@ -212,6 +212,38 @@ def run_rope(
     Returns:
         Float[Tensor, " ... sequence_length d_k"]: 应用 RoPE 后的张量。
     """
+  # RoPE 需要两两分组，所以 d_k 必须是偶数
+    if d_k % 2 != 0:
+        raise ValueError(f"d_k must be even for RoPE, got {d_k}")
+
+    x = in_query_or_key
+    device = x.device
+    dtype = x.dtype
+    half = d_k // 2
+
+    # 频率: [theta^0, theta^(-2/d_k), theta^(-4/d_k), ...]
+    i = torch.arange(half, device=device, dtype=dtype)
+    inv_freq = theta ** (-2 * i / d_k)  # (half,)
+
+    # 角度: (..., seq_len, half)
+    angles = token_positions.to(dtype=dtype).unsqueeze(-1) * inv_freq
+
+    cos = torch.cos(angles)
+    sin = torch.sin(angles)
+
+    # 两两拆分
+    x_even = x[..., 0::2]  # (..., seq_len, half)
+    x_odd = x[..., 1::2]   # (..., seq_len, half)
+
+    # 旋转
+    out_even = x_even * cos - x_odd * sin
+    out_odd = x_even * sin + x_odd * cos
+
+    # 交错拼回原维度
+    out = torch.empty_like(x)
+    out[..., 0::2] = out_even
+    out[..., 1::2] = out_odd
+    return out
     raise NotImplementedError
 
 

@@ -86,7 +86,7 @@ uv run pytest -q
 - [x] `embedding`
 - [x] `rmsnorm`
 - [x] `scaled_dot_product_attention`
-- [ ] `rope`
+- [x] `rope`
 - [ ] `swiglu`
 - 完成定义：`uv run pytest tests/test_model.py -q`
 
