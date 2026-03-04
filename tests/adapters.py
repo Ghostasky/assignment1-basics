@@ -108,6 +108,16 @@ def run_scaled_dot_product_attention(
     Returns:
         Float[Tensor, " ... queries d_v"]: SDPA 的输出
     """
+    d_k = Q.shape[-1] 
+    scores = Q @ K.transpose(-1, -2)
+    scores = scores / (d_k ** 0.5)
+
+    if mask is not None:
+        scores = scores.masked_fill(~mask, -torch.inf)
+
+    attn = torch.softmax(scores, dim=-1)
+    out = attn @ V
+    return out
     raise NotImplementedError
 
 
