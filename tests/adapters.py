@@ -87,6 +87,11 @@ def run_swiglu(
     # swiglu.w1.weight.data = w1_weight
     # swiglu.w2.weight.data = w2_weight
     # swiglu.w3.weight.data = w3_weight
+    a = in_features @ w1_weight.T
+    b = in_features @ w3_weight.T
+    h = run_silu(a) * b
+    out = h @ w2_weight.T
+    return out
     raise NotImplementedError
 
 
