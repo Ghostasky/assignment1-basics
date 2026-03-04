@@ -372,6 +372,11 @@ def run_rmsnorm(
         Float[Tensor,"... d_model"]: 与 `in_features` 形状相同的张量，
         表示 `in_features` 经 RMSNorm 后的输出。
     """
+    mean_sq = (in_features ** 2).mean(dim=-1, keepdim=True)
+    rms = torch.sqrt(mean_sq + eps)
+    normalized = in_features / rms
+    out = normalized * weights
+    return out
     raise NotImplementedError
 
 

@@ -84,7 +84,7 @@ uv run pytest -q
 
 - [x] `linear`
 - [x] `embedding`
-- [ ] `rmsnorm`
+- [x] `rmsnorm`
 - [ ] `scaled_dot_product_attention`
 - [ ] `rope`
 - [ ] `swiglu`
